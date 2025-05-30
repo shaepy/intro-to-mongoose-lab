@@ -1,5 +1,7 @@
 # Terminal CRM
-This is a lab assignment for General Assembly for our Intro to Mongoose lesson.
+This is a General Assembly lab assignment for our Intro to Mongoose lesson.
+
+<img width="569" alt="terminal-crm-screenshot" src="https://github.com/user-attachments/assets/1ee38fa2-d20c-4af1-9a0b-0f35c6bce8a4" />
 
 #### Objective
 Create a Customer Relationship Management (CRM) tool for the terminal. This will be an application that allows a company to keep track of their customers. In this lab. you’re going to create a terminal-based CRM application that will have full CRUD functionality on a single model: Customer.
@@ -23,7 +25,6 @@ Create a Customer Relationship Management (CRM) tool for the terminal. This will
 4. When dealing with choosing a specific customer to update or delete, it’s probably easiest to list the customers in the database along with their ids. Then prompt the user to enter id of the user that needs to be updated/deleted.
 
 ### Sample exchanges
-
 #### Starting the application
 ```
 Welcome to the CRM
