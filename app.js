@@ -138,19 +138,7 @@ const deleteCustomer = async () => {
 };
 
 const getCustomerById = async () => {
-  const customers = await Customer.find();
-  if (customers.length === 0) {
-    console.log(
-      `There are currently no customers. You can add a customer by creating one.`
-    );
-    return null;
-  }
-  console.log(`Below is a list of customers:`);
-  customers.forEach((customer) =>
-    console.log(
-      `id: ${customer.id} -- Name: ${customer.name}, Age: ${customer.age}`
-    )
-  );
+  await viewCustomers();
   const customerId = prompt(
     `Copy and paste the id of the customer you would like to edit here: `
   );
