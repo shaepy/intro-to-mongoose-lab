@@ -35,11 +35,15 @@ const menu = async () => {
       menu();
       break;
     case "5":
-      console.log("Exiting CRM...");
+      console.log(`
+        Exiting...`
+      );
       await mongoose.connection.close()
       break;
     default:
-      console.log('Not a valid option. Choose a # between 1-5.');
+      console.log(`
+        Not a valid option. Choose a # between 1-5.`
+      );
       menu();
   }
 };
