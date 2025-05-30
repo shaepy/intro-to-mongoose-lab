@@ -1,12 +1,12 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 import psp from "prompt-sync-plus";
 const prompt = psp();
-import mongoose from 'mongoose';
-import Customer from './models/customer.js';
+import mongoose from "mongoose";
+import Customer from "./models/customer.js";
 
 const menu = async () => {
-    const input = prompt(`
+  const input = prompt(`
     What would you like to do?
 
     1. Create a customer
@@ -16,111 +16,163 @@ const menu = async () => {
     5. Quit
 
     Enter the # of action to run: `);
-
-    if (Number(input) && Number(input) < 6) {
-        switch (input) {
-            case '1':
-                await createCustomer()
-                menu()
-                break
-            case '2':
-                await viewCustomers()
-                menu()
-                break
-            case '3':
-                await updateCustomer()
-                menu()
-                break
-            case '4':
-                await deleteCustomer()
-                menu()
-                break
-            case '5':
-                console.log("Exiting CRM...");
-                await mongoose.disconnect();
-                process.exit();
-                break
-        }
-    } else {
-        console.log(`Not a valid option. Try again.`);
-        menu()
+    
+  if (Number(input) && Number(input) < 6) {
+    switch (input) {
+      case "1":
+        await createCustomer();
+        menu();
+        break;
+      case "2":
+        await viewCustomers();
+        menu();
+        break;
+      case "3":
+        await updateCustomer();
+        menu();
+        break;
+      case "4":
+        await deleteCustomer();
+        menu();
+        break;
+      case "5":
+        console.log("Exiting CRM...");
+        await mongoose.disconnect();
+        process.exit();
+        break;
     }
-}
+  } else {
+    console.log(`Not a valid option. Try again.`);
+    menu();
+  }
+};
 
 const createCustomer = async () => {
-    const newUserInput = prompt(`Enter a new customer's NAME and AGE separated by a comma (e.g. "Jane, 25" ): `)
-    let [name, age] = newUserInput.split(',')
-    age = parseInt(age)
-    const newCustomer = await Customer.create({ name: name, age: age})
-    console.log(`A new customer has been added. 
-        Name: ${newCustomer.name}
-        Age: ${newCustomer.age}`)
-}
+  const newUserInput = prompt(
+    `Enter a new customer's NAME and AGE separated by a comma (e.g. "Jane, 25"): `
+  );
+  let [name, age] = newUserInput.split(",");
+  age = parseInt(age);
+  const newCustomer = await Customer.create({ name: name, age: age });
+  console.log(
+    `A new customer has been added.
+    Name: ${newCustomer.name}
+    Age: ${newCustomer.age}`
+  );
+};
 
 const viewCustomers = async () => {
-    const customers = await Customer.find()
-    console.log(`Viewing All Customers (${customers.length})`)
-    customers.forEach(customer => console.log(`id: ${customer.id.toString()} -- Name: ${customer.name}, Age: ${customer.age}`))
-}
+  const customers = await Customer.find();
+  if (customers.length === 0) {
+    console.log(
+      `There are currently no customers. You can add a customer by creating one.`
+    );
+    return;
+  }
+  console.log(`Viewing All Customers (${customers.length})`);
+  customers.forEach((customer) =>
+    console.log(
+      `id: ${customer.id} -- Name: ${customer.name}, Age: ${customer.age}`
+    )
+  );
+};
 
 const updateCustomer = async () => {
-    const customers = await Customer.find()
-    console.log(`Below is a list of customers:`)
-    customers.forEach(customer => console.log(`id: ${customer.id.toString()} -- Name: ${customer.name}, Age: ${customer.age}`))
-    const customerId = prompt(`Copy and paste the id of the customer you would like to update here: `)
-    const customer = await Customer.findById(customerId)
-    
-    console.log(`The id requested is ${customerId} -- Name: ${customer.name}, Age: ${customer.age}`)
-    // name
-    const updateNameInput = prompt(`Would you like to update ${customer.name}'s NAME? (Y/N): `)
-    if (updateNameInput.toLowerCase() === 'y') {
-        const newName = prompt(`Enter the customer's new NAME: `)
-        const newCustomerName = await Customer.findByIdAndUpdate(
-            customerId,
-            { name : newName },
-            { new: true }
-        )
-        console.log(`Successfully updated id: ${newCustomerName.id} -- Name: ${newCustomerName.name}, Age: ${newCustomerName.age}`)
-    } 
-    // age
-    const updateAgeInput = prompt(`Would you like to update ${customer.name}'s AGE? (Y/N): `)
-    if (updateAgeInput.toLowerCase() === 'y') {
-        const newAge = prompt(`Enter the customer's new AGE: `)
-        const newCustomerAge = await Customer.findByIdAndUpdate(
-            customerId,
-            { age : newAge },
-            { new: true }
-        )
-        console.log(`Successfully updated id: ${newCustomerAge.id} -- Name: ${newCustomerAge.name}, Age: ${newCustomerAge.age}`)
+  const customer = await getCustomerById();
+  if (customer) {
+    console.log(
+      `The id requested is ${customer.id} -- Name: ${customer.name}, Age: ${customer.age}`
+    );
+    const updateNameInput = prompt(
+      `Would you like to update ${customer.name}'s NAME? (Y/N): `
+    );
+    if (updateNameInput.toLowerCase() === "y") {
+      const newName = prompt(`Enter the customer's new NAME: `);
+      const newCustomerName = await Customer.findByIdAndUpdate(
+        customer.id,
+        { name: newName },
+        { new: true }
+      );
+      console.log(
+        `Successfully updated id: ${newCustomerName.id} -- Name: ${newCustomerName.name}, Age: ${newCustomerName.age}`
+      );
     }
-}
+    const updateAgeInput = prompt(
+      `Would you like to update ${customer.name}'s AGE? (Y/N): `
+    );
+    if (updateAgeInput.toLowerCase() === "y") {
+      const newAge = prompt(`Enter the customer's new AGE: `);
+      const newCustomerAge = await Customer.findByIdAndUpdate(
+        customer.id,
+        { age: newAge },
+        { new: true }
+      );
+      console.log(
+        `Successfully updated id: ${newCustomerAge.id} -- Name: ${newCustomerAge.name}, Age: ${newCustomerAge.age}`
+      );
+    }
+  }
+};
 
 const deleteCustomer = async () => {
-    const customers = await Customer.find()
-    console.log(`Below is a list of customers:`)
-    customers.forEach(customer => console.log(`id: ${customer.id.toString()} -- Name: ${customer.name}, Age: ${customer.age}`))
-    const customerId = prompt(`Copy and paste the id of the customer you would like to delete here: `)
-    const customer = await Customer.findById(customerId)
-
-    console.log(`The id requested is ${customerId} -- Name: ${customer.name}, Age: ${customer.age}`)
-    const confirmDelete = prompt(`Are you sure you want to delete ${customer.name}? You can't undo this. (Y/N): `)
-
-    if (confirmDelete.toLowerCase() === 'y') {
-        const confirmName = prompt(`To delete ${customer.name}, enter the word "DELETE": `)
-        if (confirmName.toLowerCase() === 'delete') {
-            await customer.deleteOne()
-            console.log(`Successfully deleted.`)
-        } else {
-            console.log(`Delete unsuccessful. Returning to Main Menu.`)
-        }
+  const customer = await getCustomerById();
+  if (customer) {
+    console.log(
+      `The id requested is ${customer.id} -- Name: ${customer.name}, Age: ${customer.age}`
+    );
+    const confirmDelete = prompt(
+      `Are you sure you want to delete ${customer.name}? You can't undo this. (Y/N): `
+    );
+    if (confirmDelete.toLowerCase() === "y") {
+      const confirmName = prompt(
+        `To delete ${customer.name}, enter the word "DELETE": `
+      );
+      if (confirmName.toLowerCase() === "delete") {
+        await customer.deleteOne();
+        console.log(`Successfully deleted.`);
+      } else {
+        console.log(`Delete unsuccessful. Returning to Main Menu.`);
+      }
+    } else {
+      console.log("Delete request has been cancelled.");
     }
-}
+  }
+};
+
+const getCustomerById = async () => {
+  const customers = await Customer.find();
+  if (customers.length === 0) {
+    console.log(
+      `There are currently no customers. You can add a customer by creating one.`
+    );
+    return null;
+  }
+  console.log(`Below is a list of customers:`);
+  customers.forEach((customer) =>
+    console.log(
+      `id: ${customer.id} -- Name: ${customer.name}, Age: ${customer.age}`
+    )
+  );
+  const customerId = prompt(
+    `Copy and paste the id of the customer you would like to edit here: `
+  );
+  if (customerId.length !== 24) {
+    console.log(`That is not a correct customer id.`);
+    return null;
+  }
+  const customer = await Customer.findById(customerId);
+  if (!customer) {
+    console.log(`Customer with id: ${customerId} not found.`);
+    return null;
+  }
+  return customer;
+};
 
 const connect = async () => {
   await mongoose.connect(process.env.MONGODB_URI);
   console.log(`
-    Welcome to the CRM.`)
+    Welcome to the CRM.`);
   await menu();
-}
+};
 
-connect()
+connect();
