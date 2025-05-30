@@ -8,7 +8,10 @@ Create a Customer Relationship Management (CRM) tool for the terminal. This will
 
 ## Tech Stack
 - JavaScript
-- Node.js (mongoose, dotenv, prompt-sync)
+- Node.js
+  - mongoose
+  - dotenv
+  - prompt-sync-plus
 - Express.js
 - MongoDB
 
