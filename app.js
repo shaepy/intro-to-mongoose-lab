@@ -17,33 +17,31 @@ const menu = async () => {
 
     Enter the # of action to run: `);
     
-  if (Number(input) && Number(input) < 6) {
-    switch (input) {
-      case "1":
-        await createCustomer();
-        menu();
-        break;
-      case "2":
-        await viewCustomers();
-        menu();
-        break;
-      case "3":
-        await updateCustomer();
-        menu();
-        break;
-      case "4":
-        await deleteCustomer();
-        menu();
-        break;
-      case "5":
-        console.log("Exiting CRM...");
-        await mongoose.disconnect();
-        process.exit();
-        break;
-    }
-  } else {
-    console.log(`Not a valid option. Try again.`);
-    menu();
+  switch (input) {
+    case "1":
+      await createCustomer();
+      menu();
+      break;
+    case "2":
+      await viewCustomers();
+      menu();
+      break;
+    case "3":
+      await updateCustomer();
+      menu();
+      break;
+    case "4":
+      await deleteCustomer();
+      menu();
+      break;
+    case "5":
+      console.log("Exiting CRM...");
+      await mongoose.disconnect();
+      process.exit();
+      break;
+    default:
+      console.log('Not a valid option. Choose a # between 1-5.');
+      menu();
   }
 };
 
