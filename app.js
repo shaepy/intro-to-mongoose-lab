@@ -36,8 +36,7 @@ const menu = async () => {
       break;
     case "5":
       console.log("Exiting CRM...");
-      await mongoose.disconnect();
-      process.exit();
+      await mongoose.connection.close()
       break;
     default:
       console.log('Not a valid option. Choose a # between 1-5.');
