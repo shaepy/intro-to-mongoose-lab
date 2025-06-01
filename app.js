@@ -54,12 +54,19 @@ const createCustomer = async () => {
   );
   let [name, age] = newUserInput.split(",");
   age = parseInt(age);
-  const newCustomer = await Customer.create({ name: name, age: age });
-  console.log(`
-    A new customer has been added.
-    Name: ${newCustomer.name}
-    Age: ${newCustomer.age}`
-  );
+  try { 
+    const newCustomer = await Customer.create({ name: name, age: age });
+    console.log(`
+      A new customer has been added.
+      Name: ${newCustomer.name}
+      Age: ${newCustomer.age}`
+    );
+  } catch (error) {
+    console.log(`
+      Something went wrong with trying to add a new customer. Check to make sure your value types are correct.
+      -- NAME (string), AGE (number) i.e "John, 40"
+      `, error)
+  }
 };
 
 const viewCustomers = async () => {
@@ -84,9 +91,6 @@ const updateCustomer = async () => {
   const customer = await getCustomerById();
   if (!customer) return;
 
-  console.log(`
-    The id requested is ${customer.id} -- Name: ${customer.name}, Age: ${customer.age}`
-  );
   const updateNameInput = prompt(`
     Would you like to update ${customer.name}'s NAME? (Y/N): `
   );
@@ -123,9 +127,6 @@ const deleteCustomer = async () => {
   const customer = await getCustomerById();
   if (!customer) return;
 
-  console.log(`
-    The id requested is ${customer.id} -- Name: ${customer.name}, Age: ${customer.age}`
-  );
   const confirmDelete = prompt(`
     Are you sure you want to delete ${customer.name}? You can't undo this. (Y/N): `
   );
@@ -165,6 +166,9 @@ const getCustomerById = async () => {
     );
     return null;
   }
+  console.log(`
+    The id requested is ${customer.id} -- Name: ${customer.name}, Age: ${customer.age}`
+  );
   return customer;
 };
 
