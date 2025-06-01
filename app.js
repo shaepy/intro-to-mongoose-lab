@@ -54,7 +54,7 @@ const createCustomer = async () => {
   );
   let [name, age] = newUserInput.split(",");
   age = parseInt(age);
-  try { 
+  try {
     const newCustomer = await Customer.create({ name: name, age: age });
     console.log(`
       A new customer has been added.
@@ -65,6 +65,7 @@ const createCustomer = async () => {
     console.log(`
       Something went wrong with trying to add a new customer. Check to make sure your value types are correct.
       -- NAME (string), AGE (number) i.e "John, 40"
+
       `, error)
   }
 };
