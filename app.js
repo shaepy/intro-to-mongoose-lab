@@ -64,9 +64,7 @@ const createCustomer = async () => {
   } catch (error) {
     console.log(`
       Something went wrong with trying to add a new customer. Check to make sure your value types are correct.
-      -- NAME (string), AGE (number) i.e "John, 40"
-
-      `, error)
+      -- NAME (string), AGE (number) i.e "John, 40"`)
   }
 };
 
@@ -160,6 +158,7 @@ const getCustomerById = async () => {
     );
     return null;
   }
+  // TODO-ST: do try..catch and return error as not found
   const customer = await Customer.findById(customerId);
   if (!customer) {
     console.log(`
@@ -173,6 +172,7 @@ const getCustomerById = async () => {
   return customer;
 };
 
+// TODO-ST: add try..catch for connection
 const connect = async () => {
   await mongoose.connect(process.env.MONGODB_URI);
   console.log(`
