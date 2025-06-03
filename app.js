@@ -158,7 +158,6 @@ const getCustomerById = async () => {
     );
     return null;
   }
-  // TODO-ST: do try..catch and return error as not found
   const customer = await Customer.findById(customerId);
   if (!customer) {
     console.log(`
@@ -172,12 +171,15 @@ const getCustomerById = async () => {
   return customer;
 };
 
-// TODO-ST: add try..catch for connection
 const connect = async () => {
-  await mongoose.connect(process.env.MONGODB_URI);
-  console.log(`
-    Welcome to the CRM.`);
-  await menu();
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log(`
+      Welcome to the CRM.`);
+    await menu();
+  } catch (e) {
+    console.log(`An error has occurred with the connection. Try again.`)
+  }
 };
 
 connect();
